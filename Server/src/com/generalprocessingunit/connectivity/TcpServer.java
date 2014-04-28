@@ -76,6 +76,8 @@ public abstract class TcpServer<T> implements UsbListener<T> {
                     }
                     self.msgReceived(gson.fromJson(msg, msgObjType));
                 }
+
+                waitForConnection();
             }
         }
     };
