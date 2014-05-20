@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/Common/Common.iml" filepath="$PROJECT_DIR$/Common/Common.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server/Server.iml" filepath="$PROJECT_DIR$/Server/Server.iml" />
       <module fileurl="file://$PROJECT_DIR$/../_Libraries/processing-android/core/android-core.iml" filepath="$PROJECT_DIR$/../_Libraries/processing-android/core/android-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../_Libraries/processing-android/core/android-processing-core.iml" filepath="$PROJECT_DIR$/../_Libraries/processing-android/core/android-processing-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/../_Libraries/processing/core/processing-core.iml" filepath="$PROJECT_DIR$/../_Libraries/processing/core/processing-core.iml" />
     </modules>
   </component>
