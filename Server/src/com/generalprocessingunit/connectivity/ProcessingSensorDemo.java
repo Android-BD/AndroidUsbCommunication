@@ -6,19 +6,10 @@ import processing.core.PConstants;
 public class ProcessingSensorDemo {
     private final PApplet p5;
 
-    private AndroidSensorListener sensorListener;
-    float[] orientation = new float[3];
+    private float[] orientation = new float[3];
 
     ProcessingSensorDemo(PApplet p5) {
         this.p5 = p5;
-        final ProcessingSensorDemo self = this;
-
-        sensorListener = new AndroidSensorListener(p5){
-            @Override
-            public void onSensorDataChanged(AndroidSensorData sensorData) {
-                self.onSensorDataChanged(sensorData);
-            }
-        };
     }
 
     void onSensorDataChanged(AndroidSensorData sensorData) {

@@ -51,10 +51,12 @@ public class TcpServerWithProcessing extends PApplet {
         orientation(PORTRAIT);
         super.setup();
 
-        sensorDemo = new ProcessingSensorDemo(this) {
+        sensorDemo = new ProcessingSensorDemo(this);
+
+        new AndroidSensorListener(this) {
             @Override
             public void onSensorDataChanged(AndroidSensorData sensorData) {
-                super.onSensorDataChanged(sensorData);
+                sensorDemo.onSensorDataChanged(sensorData);
                 server.sendMsg(Arrays.asList(sensorData.mValuesOrientation[0], sensorData.mValuesOrientation[1], sensorData.mValuesOrientation[2]));
             }
         };
