@@ -1,17 +1,19 @@
 package com.generalprocessingunit.AndroidUsbTcpSocket.Client;
 
+import com.generalprocessingunit.AndroidUsbTcpSocket.CommandMessage;
+import com.generalprocessingunit.AndroidUsbTcpSocket.MessageFromDroid;
+import com.generalprocessingunit.AndroidUsbTcpSocket.MessageFromPc;
+import com.generalprocessingunit.AndroidUsbTcpSocket.Settings;
 import com.google.gson.reflect.TypeToken;
 import processing.core.PApplet;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class ProcessingDemo extends PApplet {
 
-    Client<List<Float>> client;
-    List<Float> orientation;
+    Client<MessageFromDroid> client;
+    float[] orientation;
 
     public static void main(String[] args){
         PApplet.main(new String[] { "--present", ProcessingDemo.class.getCanonicalName() });
@@ -21,11 +23,19 @@ public class ProcessingDemo extends PApplet {
     public void setup() {
         size(displayWidth, displayHeight, PApplet.OPENGL);
 
-        Type msgReceivedType = new TypeToken<ArrayList<Float>>(){}.getType();
-        client = new Client<List<Float>>(msgReceivedType) {
+        final ProcessingDemo self = this;
+
+        Type msgReceivedType = new TypeToken<MessageFromDroid>(){}.getType();
+        client = new Client<MessageFromDroid>(msgReceivedType) {
             @Override
-            public void msgReceived(List<Float> msg) {
-                orientation = msg;
+            public void msgReceived(MessageFromDroid msg) {
+                if(null != msg.ewiOrientation) {
+                    orientation = msg.ewiOrientation;
+                }
+
+                if(null != msg.commandMessage) {
+                    self.commandReceived(msg.commandMessage);
+                }
             }
 
             @Override
@@ -39,9 +49,9 @@ public class ProcessingDemo extends PApplet {
 
         translate(width/2, height/2);
         if(null != orientation){
-            rotateY(-orientation.get(0));
-            rotateX(orientation.get(1));
-            rotateZ(orientation.get(2));
+            rotateY(-orientation[0]);
+            rotateX(orientation[1]);
+            rotateZ(orientation[2]);
         }
 
         directionalLight(255, 200, 200, .5f, 1f, .5f);
@@ -51,11 +61,36 @@ public class ProcessingDemo extends PApplet {
         box(200);
 
         if(null != orientation){
-            client.sendMsg(Arrays.asList(orientation.get(1) * 255f, orientation.get(2) * 255f));
+            client.sendMsg(new MessageFromPc());
         }
+    }
 
-//        if(millis() > 10000) {
-//            client.sendMsg(Settings.EXIT_SERVER);
-//        }
+    public void commandReceived(CommandMessage cmd) {
+        switch (cmd) {
+            case VOL_UP:
+                break;
+            case VOL_DOWN:
+                break;
+            case SWIPE_UP:
+                break;
+            case SWIPE_DOWN:
+                break;
+            case SWIPE_LEFT:
+                break;
+            case SWIPE_RIGHT:
+                break;
+            case ZOOM_IN:
+                break;
+            case ZOOM_OUT:
+                break;
+            case BTN_BACK:
+                break;
+            case BTN_MENU:
+                break;
+            case BTN_SEARCH:
+                break;
+            case TAP:
+                break;
+        }
     }
 }

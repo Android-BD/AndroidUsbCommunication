@@ -71,9 +71,6 @@ public abstract class TcpServer<T> implements UsbListener<T> {
 
                 while (socketIn.hasNext() && client.isConnected()) {
                     String msg = socketIn.next();
-                    if(msg.equals(Settings.EXIT_SERVER)) {
-                        self.exit();
-                    }
                     self.msgReceived(gson.fromJson(msg, msgObjType));
                 }
 

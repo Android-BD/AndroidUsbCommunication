@@ -47,7 +47,7 @@ public abstract class Client<T> implements UsbListener<T>{
     }
 
 
-    Client self = this;
+    private Client self = this;
 
     private Runnable clientThread = new Thread() {
         @Override
