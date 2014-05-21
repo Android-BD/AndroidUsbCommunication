@@ -11,7 +11,7 @@ import processing.core.PApplet;
 
 import java.lang.reflect.Type;
 
-public class TcpServerWithProcessing extends PApplet {
+public class DroidControlSurface extends PApplet {
     /* Server */
     TcpServer<MessageFromPc> server;
     MessageFromPc messageFromClient;
