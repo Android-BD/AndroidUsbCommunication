@@ -73,7 +73,12 @@ public abstract class Client<T> implements UsbListener<T>{
 
     private static void execAdb() {
         try {
-            String cmd = String.format(Settings.ADB_CMD, Settings.PORT, Settings.PORT);
+            String[] cmd = new String[] {
+                    Settings.ADB_PATH,
+                    "forward",
+                    String.format("tcp:%s", Settings.PORT),
+                    String.format("tcp:%s", Settings.PORT)
+            };
             Process p = Runtime.getRuntime().exec(cmd);
             Scanner sc = new Scanner(p.getErrorStream());
             if (sc.hasNext()) {
