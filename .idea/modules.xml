@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/../_Libraries/processing-android/core/android-core.iml" filepath="$PROJECT_DIR$/../_Libraries/processing-android/core/android-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/../_Libraries/processing-android/core/android-processing-core.iml" filepath="$PROJECT_DIR$/../_Libraries/processing-android/core/android-processing-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/../_Libraries/processing/core/processing-core.iml" filepath="$PROJECT_DIR$/../_Libraries/processing/core/processing-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../_Libraries/processing-android/core/processing-core-android.iml" filepath="$PROJECT_DIR$/../_Libraries/processing-android/core/processing-core-android.iml" />
     </modules>
   </component>
 </project>
