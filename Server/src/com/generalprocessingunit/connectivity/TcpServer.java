@@ -31,7 +31,7 @@ public abstract class TcpServer<T> implements UsbListener<T> {
 
     ServerSocket server = null;
 
-    TcpServer self = this;
+    TcpServer thisTcpServer = this;
 
     private Runnable serverThread = new Thread() {
         public void run() {
@@ -71,7 +71,7 @@ public abstract class TcpServer<T> implements UsbListener<T> {
 
                 while (socketIn.hasNext() && client.isConnected()) {
                     String msg = socketIn.next();
-                    self.msgReceived(gson.fromJson(msg, msgObjType));
+                    thisTcpServer.msgReceived(gson.fromJson(msg, msgObjType));
                 }
 
                 waitForConnection();

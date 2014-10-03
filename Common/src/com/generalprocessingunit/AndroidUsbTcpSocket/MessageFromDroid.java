@@ -1,11 +1,14 @@
 package com.generalprocessingunit.AndroidUsbTcpSocket;
 
 public class MessageFromDroid {
-    public float [] ewiOrientation;
+    public AndroidSensorData sensorData;
     public CommandMessage commandMessage;
 
-    public MessageFromDroid(float[] ewiOrientation, CommandMessage commandMessage) {
-        this.ewiOrientation = ewiOrientation;
+    public MessageFromDroid(CommandMessage commandMessage) {
         this.commandMessage = commandMessage;
+    }
+
+    public MessageFromDroid(AndroidSensorData sensorData) {
+        this.sensorData = sensorData;
     }
 }

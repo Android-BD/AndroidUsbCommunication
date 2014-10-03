@@ -1,8 +1,11 @@
 package com.generalprocessingunit.connectivity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.KeyEvent;
+import com.generalprocessingunit.AndroidUsbTcpSocket.AndroidSensorData;
 import com.generalprocessingunit.AndroidUsbTcpSocket.CommandMessage;
 import com.generalprocessingunit.AndroidUsbTcpSocket.MessageFromPc;
 import com.generalprocessingunit.AndroidUsbTcpSocket.MessageFromDroid;
@@ -11,26 +14,26 @@ import processing.core.PApplet;
 
 import java.lang.reflect.Type;
 
-public class DroidControlSurface extends PApplet {
+public abstract class PAppletDroidController extends PApplet {
     /* Server */
     TcpServer<MessageFromPc> server;
-    MessageFromPc messageFromClient;
     boolean exit;
 
-    /* Sensor Demo */
-    ProcessingSensorDemo sensorDemo;
-
+    Vibrator vibrator;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final PAppletDroidController thisDroidController = this;
+
+        // TODO: passing msgReceivedType seems redundant but I don't know how to get the Type parameter from the TcpServer instance
         Type msgReceivedType = new TypeToken<MessageFromPc>(){}.getType();
-        // TODO: passing msgReceivedType seems redundent but I don't know how to get the Type parameter from the TcpServer instance
+
         server = new TcpServer<MessageFromPc>(msgReceivedType) {
             @Override
             public void msgReceived(MessageFromPc msg) {
-                messageFromClient = msg;
+                 thisDroidController.onMessageReceived(msg);
             }
 
             @Override
@@ -38,6 +41,36 @@ public class DroidControlSurface extends PApplet {
                 exit = true;
             }
         };
+    }
+
+    @Override
+    public void setup()
+    {
+        orientation(PORTRAIT);
+
+        vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+
+        final PAppletDroidController thisDroidController = this;
+
+        new AndroidSensorListener(this) {
+            @Override
+            public void onSensorDataChanged(AndroidSensorData sensorData) {
+                thisDroidController.onSensorDataChanged(sensorData);
+                server.sendMsg(new MessageFromDroid(sensorData));
+            }
+        };
+    }
+
+    public abstract void onSensorDataChanged(AndroidSensorData sensorData);
+
+    private void onMessageReceived(MessageFromPc msg) {
+        if(null != msg.vibrateDuration) {
+            vibrator.vibrate(msg.vibrateDuration);
+        }
+
+        if(null != msg.vibratePattern) {
+            vibrator.vibrate(msg.vibratePattern, -1);
+        }
     }
 
     @Override
@@ -68,7 +101,7 @@ public class DroidControlSurface extends PApplet {
     }
 
     private void sendCommand(CommandMessage cmd) {
-        server.sendMsg(new MessageFromDroid(null, cmd));
+        server.sendMsg(new MessageFromDroid(cmd));
     }
 
     @Override
@@ -77,26 +110,7 @@ public class DroidControlSurface extends PApplet {
     }
 
     @Override
-    public void setup()
-    {
-        orientation(PORTRAIT);
-        super.setup();
-
-        sensorDemo = new ProcessingSensorDemo(this);
-
-        new AndroidSensorListener(this) {
-            @Override
-            public void onSensorDataChanged(AndroidSensorData sensorData) {
-                sensorDemo.onSensorDataChanged(sensorData);
-                server.sendMsg(new MessageFromDroid(sensorData.mValuesOrientation, null));
-            }
-        };
-    }
-
-    @Override
     public void draw() {
-        sensorDemo.draw();
-
         if(exit) {
             exit();
         }

@@ -1,51 +1,30 @@
-package com.generalprocessingunit.AndroidUsbTcpSocket.Client;
+package com.generalprocessingunit.AndroidUsbTcpSocket.Client.demo;
 
+import com.generalprocessingunit.AndroidUsbTcpSocket.Client.PAppletDroidCommunicator;
 import com.generalprocessingunit.AndroidUsbTcpSocket.CommandMessage;
-import com.generalprocessingunit.AndroidUsbTcpSocket.MessageFromDroid;
 import com.generalprocessingunit.AndroidUsbTcpSocket.MessageFromPc;
-import com.generalprocessingunit.AndroidUsbTcpSocket.Settings;
-import com.google.gson.reflect.TypeToken;
 import processing.core.PApplet;
 
-import java.lang.reflect.Type;
-import java.util.Arrays;
-
-public class ProcessingDemo extends PApplet {
-
-    Client<MessageFromDroid> client;
-    float[] orientation;
+public class ProcessingDemo extends PAppletDroidCommunicator {
+    float[] orientation = new float[3];
 
     public static void main(String[] args){
-        PApplet.main(new String[] { "--present", ProcessingDemo.class.getCanonicalName() });
+        PApplet.main(new String[] { /*"--present",*/ ProcessingDemo.class.getCanonicalName() });
     }
 
     @Override
     public void setup() {
-        size(displayWidth, displayHeight, PApplet.OPENGL);
-
-        final ProcessingDemo self = this;
-
-        Type msgReceivedType = new TypeToken<MessageFromDroid>(){}.getType();
-        client = new Client<MessageFromDroid>(msgReceivedType) {
-            @Override
-            public void msgReceived(MessageFromDroid msg) {
-                if(null != msg.ewiOrientation) {
-                    orientation = msg.ewiOrientation;
-                }
-
-                if(null != msg.commandMessage) {
-                    self.commandReceived(msg.commandMessage);
-                }
-            }
-
-            @Override
-            public void exit() { /*no-op*/}
-        };
+        size(1000, 720, PApplet.OPENGL);
+        super.setup();
     }
 
+    int prevMillis = 0;
     @Override
     public void draw() {
         background(50);
+        if(null != sensorData) {
+            orientation = sensorData.mValuesOrientation;
+        }
 
         translate(width/2, height/2);
         if(null != orientation){
@@ -58,10 +37,17 @@ public class ProcessingDemo extends PApplet {
         directionalLight(200, 200, 255, 1f, 0f, -1f);
         fill(255);
 
-        box(200);
+        int vibeDur = 50;
+        if((millis() - prevMillis) > 500) {
+            vibrate(vibeDur);
+            prevMillis = millis();
+        }
 
-        if(null != orientation){
-            client.sendMsg(new MessageFromPc());
+        if((millis() - prevMillis) < vibeDur) {
+            box(200);
+
+        } else {
+            box(190);
         }
     }
 
